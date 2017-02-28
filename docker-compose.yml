@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+    nginx-proxy:
+        image: jwilder/nginx-proxy
+        ports:
+            - "80:80"
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+
+    db: 
+        image: postgres:9.6.2-alpine
+        environment:
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_DB: discuss
+    
+    phoenix: 
+        image: marcelocg/phoenix
+        restart: always
+        depends_on:
+            - db
+        environment:
+            - VIRTUAL_HOST=discuss.dev
+        volumes:
+            - ./:/code
+        ports:
+            - "4000:4000"
+        links: 
+            - db:postgres
+        working_dir: /code
+        command: bash -c "mix local.hex --force && mix ecto.create && mix phoenix.server"
