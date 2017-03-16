@@ -4,7 +4,9 @@ defmodule Discuss.AuthController do
 
     def callback(conn, params) do
         
-        
+        # IO.log(conn)
+        # user_params = %{token: auth.credentials.token, email: auth.info.email, provider: "github"}
+
 
     end
 end
