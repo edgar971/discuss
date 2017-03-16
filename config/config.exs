@@ -29,8 +29,8 @@ config :ueberauth, Ueberauth,
   ]
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
-  client_id: "2c880e01e183989b4d35",
-  client_secret: "d0a46c971fa4ccd42b0217341e11aae3c34d9ff3"
+  client_id: "",
+  client_secret: ""
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
