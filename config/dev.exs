@@ -39,5 +39,5 @@ config :discuss, Discuss.Repo,
   username: "postgres",
   password: "postgres",
   database: "discuss_dev",
-  hostname: "db",
+  hostname: "localhost",
   pool_size: 10
