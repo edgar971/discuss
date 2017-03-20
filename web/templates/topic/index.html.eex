@@ -1,5 +1,6 @@
 <h2>Topics</h2>
 <p><%= get_flash(@conn, :info) %></p>
+<p><%= get_flash(@conn, :error) %></p>
 <ul class="collection">
 
     <%= for topic <- @topics do %> 
