@@ -6,6 +6,8 @@ defmodule Discuss.TopicController do
 
     plug Discuss.Plugs.RequireAuth when action in [:new, :create, :edit, :update, :delete]
 
+    plug :check_topic_owner when action in [:edit, :update, :delete]
+
     def index(conn, _params) do 
         IO.inspect(conn.assigns)
         topics = Repo.all(Topic)
@@ -21,7 +23,11 @@ defmodule Discuss.TopicController do
     # We get something like "topic" => %{"title" => "Example"} as the 
     # second parameter. Lets do some patern matching.
     def create(conn, %{"topic" => topic}) do 
-        changeset = Topic.changeset(%Topic{}, topic)
+        # conn.assigns[:user]
+        # or conn.assigns.user
+        changeset = conn.assigns.user
+            |> build_assoc(:topics)
+            |> Topic.changeset(topic)
 
         case Repo.insert(changeset) do
             {:ok, post} -> 
@@ -68,4 +74,19 @@ defmodule Discuss.TopicController do
 
     end
 
+    
+    def check_topic_owner(conn, _params) do 
+
+        %{params: %{"id" => topic_id}} = conn
+
+        if Repo.get(Topic, topic_id).user_id == conn.assigns.user.id do 
+            conn
+        else 
+            conn
+            |> put_flash(:error, "You cannot edit that")
+            |> redirect(to: topic_path(conn, :index))
+            |> halt()
+        end
+
+    end
 end
